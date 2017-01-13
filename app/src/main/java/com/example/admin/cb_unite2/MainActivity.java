@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
-
 public class MainActivity extends AppCompatActivity {
 
     BackgroundQuad backgroundQuad;
     CustomColorPicker customColorPicker;
+    ImageView imageView;
 
     final float[] currentColorHsv = new float[3];
     int color = 0xffffff00;
@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
         backgroundQuad = (BackgroundQuad) findViewById(R.id.bcQuad);
         customColorPicker = (CustomColorPicker) findViewById(R.id.colorslider);
+        imageView = (ImageView) findViewById(R.id.imageColor);
 
         alpha = Color.alpha(color);
         Color.colorToHSV(color, currentColorHsv);
@@ -30,8 +31,6 @@ public class MainActivity extends AppCompatActivity {
         if (hue == 360.f) hue = 0.f;
         setHue(hue);
 
-        // update view
-//        ambilWarnaSquare.setHue(301.3125f);
         backgroundQuad.setHue(getHue());
 
         customColorPicker.initColorPicker(new CustomColorPicker.OnColorChangedListener() {
@@ -41,23 +40,12 @@ public class MainActivity extends AppCompatActivity {
             }
         }, Color.BLUE);
 
-//        final Button button = (Button) findViewById(R.id.button);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//            button.setBackgroundColor(backgroundQuad.pixel);
-//            }
-//        });
-
-        final ImageView imageView = (ImageView) findViewById(R.id.imageColor);
-
         backgroundQuad.setImageColor(new BackgroundQuad.OnColorImageChangedListener() {
             @Override
             public void colorChanged(int color) {
                 imageView.setBackgroundColor(color);
             }
         },backgroundQuad.pixel);
-
     }
 
     private float getHue() {
@@ -67,6 +55,4 @@ public class MainActivity extends AppCompatActivity {
     private void setHue(float hue) {
         currentColorHsv[0] = hue;
     }
-
-
 }

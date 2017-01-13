@@ -20,39 +20,48 @@ public class BackgroundQuad extends View{
 
     private OnColorImageChangedListener xz;
 
-    Paint paint;
-    Shader luar;
-    int _circlePadding = 5;
-    //    final float[] color = { 301.3125f, 0.43854168f, 0.49374998f };
-    final float[] color = { 1.f, 1.f, 1.f };
+    private Bitmap bitmap;
+    private Paint paint;
+    private Shader luar;
+    private Shader dalam;
+    private ComposeShader shader;
 
+    int circlePadding = 5;
+    final float[] color = { 1.f, 1.f, 1.f };
+    int rgbB = Color.BLUE;
     float circleRadius = 16;
     float circleX = circleRadius;
     float circleY = circleRadius;
     int width, height;
-    Shader dalam;
-    ComposeShader shader;
-    private Bitmap bitmap;
     int pixel;
+
+    public BackgroundQuad(Context context) {
+        super(context);
+        init();
+    }
 
     public BackgroundQuad(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
 
     public BackgroundQuad(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        init();
     }
 
-    int rgbB = Color.BLUE;
+    void init(){
+
+    }
 
     @Override protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Log.d(this.toString(), "OnDraw");
+
         if (paint == null) {
             paint = new Paint();
             luar = new LinearGradient(0.f, 0.f, 0.f, this.getMeasuredHeight(), 0xffffffff, 0xff000000, Shader.TileMode.CLAMP);
         }
-//        rgb = Color.HSVToColor(color);
+
         dalam = new LinearGradient(0.f+circleRadius, 0.f+circleRadius, this.getMeasuredWidth()-circleRadius, 0.f-circleRadius, 0xffffffff, rgbB, Shader.TileMode.CLAMP);
         shader = new ComposeShader(luar, dalam, PorterDuff.Mode.OVERLAY );
         paint.setShader(shader);
@@ -67,17 +76,11 @@ public class BackgroundQuad extends View{
         Paint circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         circlePaint.setColor(Color.WHITE);
         circlePaint.setStyle(Paint.Style.STROKE);
-        circlePaint.setStrokeWidth(_circlePadding);
+        circlePaint.setStrokeWidth(circlePadding);
         canvas.drawCircle(circleX,circleY,circleRadius,circlePaint);
 
         bitmap = this.getDrawingCache(true);
         pixel = bitmap.getPixel((int)circleX,(int)circleY);
-//        int redValue = Color.red(pixel);
-//        int blueValue = Color.blue(pixel);
-//        int greenValue = Color.green(pixel);
-//        LogUtil.info(this, "redValue - " + redValue + " greenValue - " + greenValue + " blueValue - " + blueValue);
-//        col = Color.rgb(redValue, greenValue, blueValue);
-//        LogUtil.info(this,"pixel " + pixel + "color " + col);
         xz.colorChanged(pixel);
     }
 
@@ -96,8 +99,7 @@ public class BackgroundQuad extends View{
         invalidate();
     }
     //////////////////////////////////////////////////
-    public interface OnColorImageChangedListener
-    {
+    public interface OnColorImageChangedListener {
         void colorChanged(int color);
     }
 
@@ -106,11 +108,7 @@ public class BackgroundQuad extends View{
         pixel = c;
         invalidate();
     }
-
-
-
 /////////////////////////////////////////////////
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
@@ -121,7 +119,7 @@ public class BackgroundQuad extends View{
                 circleX = event.getX();
                 circleY = event.getY();
 
-                if(circleX<circleRadius){                              //лево верх
+                if(circleX<circleRadius){                              //top_left
                     circleX = circleRadius;
                     if(circleY<circleRadius){
                         circleY = circleRadius;
@@ -130,21 +128,21 @@ public class BackgroundQuad extends View{
                         circleY = height-circleRadius;
                     }
                 }
-                else if(circleY<circleRadius){                         //право верх
+                else if(circleY<circleRadius){                         //top_right
                     circleY = circleRadius;
                     if(circleX>width-circleRadius){
                         circleX = width - circleRadius;
                     }
                 }
 
-                else if(circleX>width-circleRadius) {              //право низ
+                else if(circleX>width-circleRadius) {              //bottom_right
                     circleX = width - circleRadius;
                     if (circleY > height-circleRadius) {
                         circleY = height - circleRadius;
                     }
                 }
 
-                else if(circleY>height-circleRadius){              //лево низ
+                else if(circleY>height-circleRadius){              //bottom_left
                     circleY = height-circleRadius;
                     if(circleX<circleRadius){
                         circleX = circleRadius;

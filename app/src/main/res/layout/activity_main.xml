@@ -40,7 +40,7 @@
             android:id="@+id/imageColor"
             android:layout_width="100dp"
             android:layout_height="100dp"
-
+            android:background="@android:color/black"
             />
 
     </RelativeLayout>
